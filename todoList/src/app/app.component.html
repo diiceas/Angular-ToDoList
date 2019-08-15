@@ -1,0 +1,8 @@
+<div class="background">
+  <div class="links">
+    <a class="float-sm-left" (click)="callRegister()">Sign UP</a>
+    <a class="float-sm-left" (click)="callLogin()">Sign IN</a>
+  </div>
+  <app-tasks *ngIf="isRegister"> </app-tasks>
+  <app-login *ngIf="isLogin"></app-login>
+</div>

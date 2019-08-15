@@ -1,0 +1,14 @@
+.registration-form {
+  color: white;
+  padding: 40px;
+  border: 2px solid silver;
+  max-width: 600px;
+  min-width: 400px;
+
+  border-radius: 15px;
+
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 35%;
+  left: 50%;
+}
