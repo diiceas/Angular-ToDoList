@@ -1,8 +1,16 @@
 <div class="background">
-  <div class="links">
-    <a class="float-sm-left" (click)="callRegister()">Sign UP</a>
-    <a class="float-sm-left" (click)="callLogin()">Sign IN</a>
+  <div class="navigate">
+    <span class="span">todo list</span>
+    <div class="top">
+      <a class="float-sm-left" *ngIf="loginDisabled" (click)="reload()">Sign OUT</a>
+      <a class="float-sm-left" *ngIf="!loginDisabled" (click)="callRegister()">Sign UP</a>
+      <a class="float-sm-left" *ngIf="!loginDisabled" (click)="callLogin()">Sign IN</a>
+    </div>
   </div>
-  <app-tasks *ngIf="isRegister"> </app-tasks>
-  <app-login *ngIf="isLogin"></app-login>
+  <div class="div-img" *ngIf="!imageDisabled">
+    <img class="img" src="https://www.myclientsplus.com/media/1007/task2fpractice-management.png" />
+  </div>
+  <app-register *ngIf="isRegister" (sendCredentials)="getlogin($event)"></app-register>
+  <app-login *ngIf="isLogin" (sendCredentials)="getlogin($event)"></app-login>
+  <app-tasks *ngIf="isLoad" [userID]="userID"></app-tasks>
 </div>

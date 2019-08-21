@@ -1,46 +1,49 @@
-import { Component, OnInit } from "@angular/core";
-import { NgForm } from "@angular/forms";
-import { AngularFirestore } from "@angular/fire/firestore";
-import generateID from "src/utils/id-generator";
+import { UserService } from "./../user/user.service";
+import { Component, Output, EventEmitter } from "@angular/core";
 
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.css"]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
+  @Output() sendCredentials: EventEmitter<any> = new EventEmitter();
+
   private login: string;
   private password: string;
   private isLoginFormValid: boolean = false;
+  private isCredentialsValid: boolean = true;
+  private _userService: UserService;
+  private userID: string;
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(userService: UserService) {
+    this._userService = userService;
+  }
 
-  ngOnInit() {}
+  onLoginChange(login: string) {
+    this.login = login;
+    this.validateForm();
+  }
+
+  onPasswordChange(password: string) {
+    this.password = password;
+    this.validateForm();
+  }
 
   validateForm() {
     this.isLoginFormValid = !!(this.login && this.password);
   }
 
-  createUser(password: string, login: string) {
-    const userID = generateID();
-    this.firestore.collection("users").add({
-      userID,
-      password,
-      login
-    });
-  }
-
   onSubmit() {
-    this.createUser(this.password, this.login);
-  }
-
-  onLoginChange(login) {
-    this.login = login;
-    this.validateForm();
-  }
-
-  onPasswordChange(password) {
-    this.password = password;
-    this.validateForm();
+    this._userService.getUserID(this.login, this.password).subscribe(data => {
+      data.forEach(id => {
+        this.userID = id.id;
+      });
+      if (this.userID) {
+        this.sendCredentials.emit(this.userID);
+      } else {
+        this.isCredentialsValid = false;
+      }
+    });
   }
 }

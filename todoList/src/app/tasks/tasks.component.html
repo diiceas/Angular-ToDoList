@@ -1,1 +1,38 @@
-<app-task></app-task>
+<div *ngIf="isDataAvalible">
+  <div class="container">
+    <h5 class="display-6 text-center ">Hi, {{ userLogin?.toUpperCase() }} this is your</h5>
+    <h1 class="display-4 text-center ">TASK LIST</h1>
+    <ul class="list-group text-center ">
+      <li *ngFor="let item of currentUserDataTask" class="list-group-item">
+        <span class="hover-cursor" [class.text-success]="item.isDone" (click)="checkItem(item, item.isDone)">
+          <i class="fa fa-lg" [ngClass]="item.isDone ? 'fa-check-circle' : 'fa-circle-thin'"></i>
+        </span>
+        <span *ngIf="!item.isEdit; else editingItem" (dblclick)="onUpdate(item)">
+          {{ item.text }}
+        </span>
+        <ng-template #editingItem>
+          <input
+            type="text"
+            class="todo-item-edit"
+            [(ngModel)]="item.text"
+            (blur)="doneUpdate(item)"
+            (keyup.enter)="doneUpdate(item)"
+            autofocus
+          />
+        </ng-template>
+        <span class="hover-cursor text-danger pull-right" (click)="onDelete(currentUserDataTask.indexOf(item))">
+          <i class="fa fa-trash-o fa-lg"></i>
+        </span>
+      </li>
+      <span class="hint">Double click to edit</span>
+    </ul>
+    <div class="input-group">
+      <input class="form-control width100" [(ngModel)]="inputValue" (keyup.enter)="addUserData(); inputValue = ''" />
+      <span class="input-group-btn">
+        <button class="btn btn-info" (click)="addUserData(); inputValue = ''">
+          ADD
+        </button>
+      </span>
+    </div>
+  </div>
+</div>

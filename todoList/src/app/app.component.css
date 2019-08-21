@@ -14,7 +14,33 @@ a {
   font-weight: 700;
   text-decoration: none;
 }
-.links {
+.top {
+  margin-top: 10px;
   float: right;
   margin-right: 30px;
+}
+.span {
+  float: left;
+  margin-top: 0;
+  margin-left: 30px;
+
+  font-size: 30px;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+.navigate {
+  padding-bottom: 50px;
+  border-bottom: 1px solid white;
+}
+a.disabled {
+  color: gray;
+  cursor: not-allowed;
+  text-decoration: underline;
+  pointer-events: none;
+}
+.div-img {
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 35%;
+  left: 50%;
 }

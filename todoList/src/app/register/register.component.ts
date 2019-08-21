@@ -1,67 +1,65 @@
-import { TaskService } from "../shared/task.service";
-import { Component, OnInit } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import { UserService } from "./../user/user.service";
+import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 
-import generateID from "src/utils/id-generator";
+import generateID from "src/utils/id-generator"; //own function
 
 @Component({
-  selector: "app-task",
+  selector: "app-register",
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.css"]
 })
-export class TaskComponent implements OnInit {
+export class RegisterComponent {
+  @Output() sendCredentials = new EventEmitter();
+
   private login: string;
   private password: string;
   private repeatPasword: string;
   private isPasswordsSame: boolean = true;
   private isFormValid: boolean = false;
+  private _userService: UserService;
+  private userID: string;
+  private isLoginExist: boolean = true;
 
-  constructor(private service: TaskService, private firestore: AngularFirestore) {}
+  constructor(userService: UserService) {
+    this._userService = userService;
+  }
 
-  ngOnInit() {}
-
-  onLoginChange(login) {
+  onLoginChange(login: string) {
     this.login = login;
     this.validateForm();
   }
 
-  onPasswordChange(password) {
+  onPasswordChange(password: string) {
     this.password = password;
     this.validateForm();
   }
 
-  onRepeatPasswordChange(repeatPassword) {
+  onRepeatPasswordChange(repeatPassword: string) {
     this.repeatPasword = repeatPassword;
     this.isPasswordsSame = this.password === this.repeatPasword;
     this.validateForm();
+  }
+
+  checkIsLoginExist(login: string) {
+    this._userService.isLoginExist(login).then(user => {
+      user.forEach(doc => {
+        this.isLoginExist = !doc.data().login;
+      });
+    });
   }
 
   validateForm() {
     this.isFormValid = !!(this.login && this.isPasswordsSame && this.password && this.repeatPasword);
   }
 
-  submitRegisterForm(form: NgForm) {
-    const userID = generateID();
-    this.firestore.collection("user").add({
-      userID,
-      login: "user2",
-      password: "user2"
-    });
-  }
-
-  getUserData(password: string, login: string) {}
-
   createUser(password: string, login: string) {
-    const userID = generateID();
-    this.firestore.collection("users").add({
-      userID,
-      password,
-      login
-    });
+    this.userID = generateID();
+    this._userService.regUser(this.userID, password, login);
   }
 
   onSubmit() {
     this.createUser(this.password, this.login);
+    this.sendCredentials.emit(this.userID);
   }
 }

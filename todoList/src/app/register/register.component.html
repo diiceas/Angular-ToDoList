@@ -1,21 +1,22 @@
 <div class="registration-form">
   <h1 class="display-4 text-center">Register</h1>
-  <form autocomplete="off" #myForm="ngForm" (ngSubmit)="onSubmit()">
+  <form autocomplete="off" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <input
+        id="loginInput"
         #login
         (keyup)="onLoginChange(login.value)"
-        name="fullName"
+        (blur)="checkIsLoginExist(login.value)"
         class="form-control"
         required
         placeholder="Login"
       />
     </div>
+    <div class="validation-error validation-error-login" *ngIf="!isLoginExist" for="loginInput">Login exist!</div>
     <div class="form-group">
       <input
         #password
         (keyup)="onPasswordChange(password.value)"
-        name="position"
         class="form-control"
         placeholder="Password"
         type="password"
@@ -26,7 +27,6 @@
         id="repeatPasswordInput"
         #repeatPassword
         (keyup)="onRepeatPasswordChange(repeatPassword.value)"
-        name="taskCode"
         class="form-control"
         placeholder="Confirm Password"
         type="password"
